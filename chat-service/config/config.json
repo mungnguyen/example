@@ -2,7 +2,7 @@
     "development": {
         "username": "mung",
         "password": "12345",
-        "database": "chat",
+        "database": "chatservice",
         "host": "127.0.0.1",
         "dialect": "mysql"
     },

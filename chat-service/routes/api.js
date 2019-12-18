@@ -1,10 +1,10 @@
 
 module.exports = function (app) {
     const { login } = require("../controller/login")
-    const { listAllRoom } = require("../controller/room")
+    const { listAllGroup } = require("../controller/group")
 
     app.post("/login", login)
 
-    //room api
-    app.get("/room/:userId", listAllRoom)
+    //group api
+    app.get("/group/:userId", listAllGroup)
 }

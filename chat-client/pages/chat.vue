@@ -2,19 +2,72 @@
   <div class="chat">
     <div>
       <center>
-        <h2>
-          Welcom chat room
-        </h2>
+        <h2>Welcom chat room</h2>
       </center>
     </div>
     <v-row>
       <v-col cols="3">
-        <v-list>
-          <v-list-item-group v-model="room" color="primary">
-            <v-list-item v-for="(item, index) in roomList" :key="index" three-line>
+        <v-list color="yellow">
+          <v-subheader>PROJECT</v-subheader>
+          <v-list-item-group color="primary">
+            <v-list-item
+              v-for="(item, index) in projectList"
+              :key="index"
+              @click="openChatRoom(item, 'project')"
+            >
               <v-list-item-content>
                 <v-list-item-title v-text="item.name"></v-list-item-title>
-                <v-divider></v-divider>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+
+        <v-divider></v-divider>
+
+        <v-list>
+          <v-subheader>PROCEDURAL TASK</v-subheader>
+          <v-list-item-group color="primary">
+            <v-list-item
+              v-for="(item, index) in proceduralList"
+              :key="index"
+              @click="openChatRoom(item, 'procedural')"
+            >
+              <v-list-item-content>
+                <v-list-item-title v-text="item.name"></v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+
+        <v-divider></v-divider>
+
+        <v-list>
+          <v-subheader>RECURRENT TASK</v-subheader>
+          <v-list-item-group color="primary">
+            <v-list-item
+              v-for="(item, index) in recurrentList"
+              :key="index"
+              @click="openChatRoom(item, 'recurrent')"
+            >
+              <v-list-item-content>
+                <v-list-item-title v-text="item.name"></v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+
+        <v-divider></v-divider>
+
+        <v-list>
+          <v-subheader>DEPARTMENT</v-subheader>
+          <v-list-item-group color="primary">
+            <v-list-item
+              v-for="(item, index) in recurrentList"
+              :key="index"
+              @click="openChatRoom(item, 'recurrent')"
+            >
+              <v-list-item-content>
+                <v-list-item-title v-text="item.name"></v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list-item-group>
@@ -22,7 +75,7 @@
       </v-col>
 
       <v-col cols="9" class="room-detail">
-        <v-card class="room-header">ABC - {{ room }}</v-card>
+        <v-card class="room-header">{{ room.name }}</v-card>
 
         <v-row class="room-body">
           <v-col cols="8">
@@ -44,7 +97,9 @@
             </div>
           </v-col>
 
-          <v-col cols="4"></v-col>
+          <v-col cols="4">
+            <ProjectInfo :room="room" />
+          </v-col>
         </v-row>
       </v-col>
     </v-row>
@@ -53,47 +108,96 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-const newLocal = "getAllRoom";
+import ProjectInfo from "../components/ProjectInfo";
+
 export default {
+  components: {
+    ProjectInfo
+  },
+
   data() {
     return {
-      room: "",
+      room: {},
       message: ""
     };
   },
 
   computed: {
     ...mapState("room", ["roomList"]),
-    ...mapState("login", ["user"])
+    ...mapState("login", ["user"]),
+    ...mapState("project", ["projectList"]),
+    ...mapState("proceduralTask", ["proceduralList"]),
+    ...mapState("recurrentTask", ["recurrentList"])
   },
 
   async asyncData({ store }) {
     try {
       const userId = localStorage.getItem("userId");
-      await store.dispatch("room/getAllRoom", userId);
+      await Promise.all([
+        // store.dispatch("room/getAllRoom", userId),
+        store.dispatch("project/getProjectListByUserId", userId),
+        store.dispatch("proceduralTask/getProceduralListByUserId", userId),
+        store.dispatch("recurrentTask/getRecurrentListByUserId", userId)
+      ]);
     } catch (err) {
       console.log("chat-asyncData", err);
     }
   },
 
   async created() {
-    if (!this.roomList.length) {
-      const userId = localStorage.getItem("userId");
-      console.log("ser", userId);
-      this.getAllRoom(userId);
+    const userId = localStorage.getItem("userId");
+    console.log("ser", userId);
+
+    if (!this.projectList.length) {
+      await this.getProjectListByUserId(userId);
+    }
+    if (!this.proceduralList.length) {
+      await this.getProceduralListByUserId(userId);
+    }
+    if (!this.recurrentList.length) {
+      await this.getRecurrentListByUserId(userId);
     }
   },
 
   methods: {
     ...mapActions("room", ["getAllRoom"]),
-
+    ...mapActions("project", [
+      "getProjectListByUserId",
+      "getTaskListByProjectId"
+    ]),
+    ...mapActions("proceduralTask", ["getProceduralListByUserId"]),
+    ...mapActions("recurrentTask", ["getRecurrentListByUserId"]),
+    ...mapActions("member", ["getProjectMember"]),
     getName() {
       if (process.browser) {
         const userName = localStorage.getItem("name");
         console.log("ser", userName);
         return userName;
       }
-    }
+    },
+
+    openChatRoom(room, type) {
+      if (type === "project") {
+        this.getProjectRoom(room);
+      } else if (type === "procedural") {
+        this.getProceduralRoom(room);
+      } else if (type === "recurrent") {
+        this.getRecurrentRoom(room);
+      }
+    },
+
+    async getProjectRoom(room) {
+      this.room = room;
+      console.log("room", room);
+      await Promise.all([
+        this.getProjectMember(room.id),
+        this.getTaskListByProjectId(room.id)
+      ]);
+    },
+
+    getProceduralRoom(room) {},
+
+    getRecurrentRoom(room) {}
   }
 };
 </script>

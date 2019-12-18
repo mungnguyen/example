@@ -5,9 +5,9 @@ import {
 export const state = () => {
     return {
         api: {
-            login: '/api/login'
+            login: '/user/api/auth/login'
         },
-        user: {}
+        er: {}
     }
 }
 
@@ -25,7 +25,8 @@ export const actions = {
 
             commit('SET_USER', data)
             res.isSuccess = true
-            res.user = data
+            res.user = data.user
+            res["token"] = data.token
         } catch (err) {
             console.log('login', err)
         }

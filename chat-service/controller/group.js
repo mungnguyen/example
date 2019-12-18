@@ -1,13 +1,12 @@
 const db = require("../models");
 const Sequelize = require('sequelize');
 
-exports.listAllRoom = async function (req, res) {
-    const where = {}
+exports.listAllGroupByUserId = async function (req, res) {
     try {
-        const roomList = await db.room.findAll({
+        const groupList = await db.group.findAll({
             include: [
                 {
-                    model: db.roomMember,
+                    model: db.groupMember,
                     where: {
                         userId: req.params.userId
                     }
@@ -15,9 +14,13 @@ exports.listAllRoom = async function (req, res) {
             ]
         })
 
-        res.json(roomList)
+        res.json(groupList)
     } catch (err) {
-        console.log("listAllRoom", err)
+        console.log("listAllGroupByUserId", err)
         res.status(400).json({ error: err })
     }
+}
+
+exports.createGroup = async function (req, res) {
+
 }

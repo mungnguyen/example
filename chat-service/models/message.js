@@ -13,9 +13,13 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.DATE,
             allowNull: false
         },
+        userId: {
+            type: DataTypes.DOUBLE,
+            allowNull: false
+        },
         isDeleteBySender: {
             type: DataTypes.BOOLEAN,
-            allowNull: false,
+            defaultValue: false,
         },
     },
         {

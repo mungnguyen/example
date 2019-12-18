@@ -32,22 +32,13 @@ Object.keys(db).forEach(modelName => {
 });
 
 // Association
-// user - roomMember
-console.log("íbs", db)
-db.user.hasMany(db.roomMember, { foreignKey: { name: 'userId', allowNull: false } });
-db.roomMember.belongsTo(db.user, { foreignKey: { name: 'userId', allowNull: false } });
+// group - groupMember
+db.group.hasMany(db.groupMember, { foreignKey: { name: 'groupId', allowNull: false } });
+db.groupMember.belongsTo(db.group, { foreignKey: { name: 'groupId', allowNull: false } });
 
-// room - roomMember
-db.room.hasMany(db.roomMember, { foreignKey: { name: 'roomId', allowNull: false } });
-db.roomMember.belongsTo(db.room, { foreignKey: { name: 'roomId', allowNull: false } });
-
-// user - message
-db.user.hasMany(db.message, { foreignKey: { name: 'userId', allowNull: false } });
-db.message.belongsTo(db.user, { foreignKey: { name: 'userId', allowNull: false } });
-
-// room - roomMember
-db.room.hasMany(db.message, { foreignKey: { name: 'roomId', allowNull: false } });
-db.message.belongsTo(db.room, { foreignKey: { name: 'roomId', allowNull: false } });
+// group - groupMember
+db.group.hasMany(db.message, { foreignKey: { name: 'groupId', allowNull: false } });
+db.message.belongsTo(db.group, { foreignKey: { name: 'groupId', allowNull: false } });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

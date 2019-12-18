@@ -55,7 +55,27 @@ module.exports = {
   proxy: {
     '/api/': {
       target: 'http://localhost:5000/',
-      pathRewrite: { '^/api/': '' }
+      pathRewrite: { '^/api/': '' },
+    },
+    "/user/": {
+      target: "https://api-ptpmpt-18.herokuapp.com",
+      pathRewrite: { "^/user/": "" }
+    },
+    "/userinfo/": {
+      target: "https://dsd05-dot-my-test-project-252009.appspot.com/",
+      pathRewrite: { "^/userinfo/": "" }
+    },
+    "/project/": {
+      target: 'http://3.1.20.54/v1/',
+      pathRewrite: { '^/project/': '' }
+    },
+    "/procedural/": {
+      target: 'http://morning-oasis-29841.herokuapp.com/',
+      pathRewrite: { '^/procedural/': '' }
+    },
+    "/recurrent/": {
+      target: 'https://falling-frog-38743.pktriot.net/',
+      pathRewrite: { '^/recurrent/': '' }
     }
   },
   /*
