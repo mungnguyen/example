@@ -48,7 +48,7 @@ export const actions = {
         const { department } = state.api
 
         try {
-            const data = await this.$axios.$get(`${department}/Members/departments/${department}`)
+            const data = await this.$axios.$get(`${department}/Members/departments/${departmentId}`)
             if (data) {
                 const listId = data.map(item => item.user)
                 const listIdString = listId.join()
