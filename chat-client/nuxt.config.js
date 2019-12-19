@@ -76,7 +76,16 @@ module.exports = {
     "/recurrent/": {
       target: 'https://falling-frog-38743.pktriot.net/',
       pathRewrite: { '^/recurrent/': '' }
-    }
+    },
+    "/chat/": {
+      target: 'http://13.67.61.152:8080/',
+      pathRewrite: { '^/chat/': '' }
+    },
+    "/department/": {
+      target: 'https://dsd15-log.azurewebsites.net',
+      pathRewrite: { '^/department/': '' }
+    },
+
   },
   /*
   ** vuetify module configuration

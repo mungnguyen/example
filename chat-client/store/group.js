@@ -3,22 +3,22 @@ import { set } from '@/utils/action'
 export const state = () => {
     return {
         api: {
-            room: '/api/room'
+            group: '/api/group'
         },
-        roomList: []
+        groupList: []
     }
 }
 
 export const mutations = {
-    SET_ROOM_LIST: set('roomList')
+    SET_ROOM_LIST: set('groupList')
 }
 
 export const actions = {
-    async getAllRoom({ state, commit }, userId) {
-        const { room } = state.api
+    async getAllGroup({ state, commit }, userId) {
+        const { group } = state.api
 
         try {
-            const data = await this.$axios.$get(`${room}/${userId}`)
+            const data = await this.$axios.$get(`${group}/${userId}`)
 
             commit('SET_ROOM_LIST', data)
         } catch (err) {

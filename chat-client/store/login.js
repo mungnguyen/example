@@ -23,10 +23,12 @@ export const actions = {
         try {
             const data = await this.$axios.$post(login, user)
 
-            commit('SET_USER', data)
-            res.isSuccess = true
-            res.user = data.user
-            res["token"] = data.token
+            if (!data.errors) {
+                commit('SET_USER', data)
+                res.isSuccess = true
+                res.user = data.user
+                res["token"] = data.token
+            }
         } catch (err) {
             console.log('login', err)
         }
